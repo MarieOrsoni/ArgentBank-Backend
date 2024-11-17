@@ -101,6 +101,109 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+  /accounts:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts Module
+      summary: User Accounts API
+      description: API for fetching a user accounts
+      #produces:
+       # - application/json
+      responses:
+        '200':
+          description: User accounts retrieved successully
+          schema:
+            $ref: '#/definitions/AllAccounts'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /accounts/{accountId}/transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts Module
+      summary: User Account Transactions API
+      description: API for fetching a user account transactions
+      parameters:
+        - in: path
+          name: accountId
+          description:  Account id 
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Transactions by month payload
+          required: true
+          schema:
+            $ref: '#/definitions/Month'
+      #produces:
+       # - application/json
+      responses:
+        '200':
+          description: User account transactions retrieved successully
+          schema:
+            $ref: '#/definitions/AllTransactions'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+  /accounts/transactions/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts Module
+      summary: User Account Transaction API
+      description: API for get user account transaction
+      parameters:
+        - in: path
+          name: transactionId
+          description:  Transaction id 
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Transaction retrieved successully
+          schema:
+            $ref: '#/definitions/ApiTransactionResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    patch:
+      security:
+        - Bearer: []
+      tags:
+        - Accounts Module
+      summary: Update Transaction API
+      description: API for update a user account transactions
+      parameters:
+        - in: path
+          name: transactionId
+          description:  Transaction id 
+          required: true
+          type: string
+        - in: body
+          name: body
+          description: Update transaction payload
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateTransaction'
+      #produces:
+       # - application/json
+      responses:
+        '200':
+          description: Transaction updated successully
+          schema:
+            $ref: '#/definitions/ApiTransactionResponse'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -124,6 +227,19 @@ definitions:
       userName:
         type: string
         description: user public name
+  Month: 
+    properties:
+      month: 
+        type: number
+        description: active month
+  UpdateTransaction:
+    properties:
+      category:
+        type: string
+        description: category value
+      note:
+        type: string
+        description: note value
   Login:
     properties:
       email:
@@ -156,3 +272,39 @@ definitions:
     properties:
       userName:
         type: string
+  AllAccounts:
+    type: array
+    items:
+      $ref: '#/definitions/ApiAccountResponse'
+  ApiAccountResponse:
+    type: object
+    properties:
+      name:
+        type: string
+      amount:
+        type: integer
+      description:
+        type: string
+  AllTransactions:
+    type: array
+    items:
+      $ref: '#/definitions/ApiTransactionResponse'
+  ApiTransactionResponse:
+    type: object
+    properties:
+      date:
+        type: string
+      amount:
+        type: integer
+      balance:
+        type: integer
+      description:
+        type: string
+      transactionType: 
+        type: string
+      category: 
+        type: string
+      note: 
+        type: string
+  
+      
